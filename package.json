@@ -16,7 +16,7 @@
     "@aptrn/markovchain-ts": "^0.0.1",
     "@aptrn/maxmsp-ts": "^0.0.1",
     "@not251/not251": "^0.0.2",
-    "@types/maxmsp": "^1.0.13",
+    "@types/maxmsp": "^1.0.14",
     "typescript": "^5.6.3"
   }
 }
