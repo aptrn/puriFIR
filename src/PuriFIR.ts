@@ -24,93 +24,91 @@ export class PuriFIR {
             throw new Error('Input buffer is too short!');
         }
 
-        // Initialize output amplitudes
-        const amplitudes: number[] = [];
-        for (let i = 0; i < this.windowSize; i++) {
-            amplitudes[i] = 0;
-        }
+        // Process each channel independently
+        const outputBuffer: number[][] = [[], []];
         
-        // Process the input buffer in overlapping windows
-        let track = 0;
-        const jump = this.windowSize / 2;
-        
-        while (track + this.windowSize <= inputBuffer[0].length) {
-            // Construct buffer from average of left/right channels, windowed by hanning
-            const buffer: number[] = [];
+        for (let channel = 0; channel < 2; channel++) {
+            // Initialize output amplitudes for this channel
+            const amplitudes: number[] = [];
             for (let i = 0; i < this.windowSize; i++) {
-                buffer[i] = ((inputBuffer[0][track + i] + inputBuffer[1][track + i]) / 2) * this.hanningWindow[i];
+                amplitudes[i] = 0;
             }
             
-            // Gather spectral data of buffer
-            const bufferFFT = this.fft(buffer);
+            // Process the input buffer in overlapping windows
+            let track = 0;
+            const jump = this.windowSize / 2;
             
-            // Update maximum peak array
-            for (let i = 0; i < this.windowSize; i++) {
-                const mag = Math.sqrt(bufferFFT[i].re * bufferFFT[i].re + bufferFFT[i].im * bufferFFT[i].im);
-                amplitudes[i] = Math.max(amplitudes[i], mag);
+            while (track + this.windowSize <= inputBuffer[channel].length) {
+                // Construct buffer from current channel, windowed by hanning
+                const buffer: number[] = [];
+                for (let i = 0; i < this.windowSize; i++) {
+                    buffer[i] = inputBuffer[channel][track + i] * this.hanningWindow[i];
+                }
+                
+                // Gather spectral data of buffer
+                const bufferFFT = this.fft(buffer);
+                
+                // Update maximum peak array
+                for (let i = 0; i < this.windowSize; i++) {
+                    const mag = Math.sqrt(bufferFFT[i].re * bufferFFT[i].re + bufferFFT[i].im * bufferFFT[i].im);
+                    amplitudes[i] = Math.max(amplitudes[i], mag);
+                }
+                
+                track += jump;
             }
-            
-            track += jump;
-        }
 
-        // Get log of magnitude spectrum for cepstral processing
-        const logMag: number[] = [];
-        for (let i = 0; i < this.windowSize; i++) {
-            logMag[i] = Math.log(amplitudes[i] + 0.000001);
-        }
-        
-        // Compute cepstrum from FFT of log magnitude
-        const cepstrum = this.fft(logMag);
-        
-        // Prepare hilbert transform
-        const H: number[] = [];
-        for (let i = 0; i < this.windowSize; i++) {
-            H[i] = 0;
-        }
-        H[0] = 1; // DC component
-        H[this.windowSize / 2] = 1; // Nyquist frequency
-        for (let i = 1; i < this.windowSize / 2; i++) {
-            H[i] = 2; // Double positive frequencies
-        }
-        
-        // Apply hilbert transform
-        const cepstrumHilbert: { re: number; im: number }[] = [];
-        for (let i = 0; i < this.windowSize; i++) {
-            cepstrumHilbert[i] = {
-                re: cepstrum[i].re * H[i],
-                im: cepstrum[i].im * H[i]
-            };
-        }
-        const analyticSignal = this.ifft(cepstrumHilbert);
-        
-        // Get phase rotated signal from imaginary part of analytic signal
-        const minPhase: number[] = [];
-        for (let i = 0; i < this.windowSize; i++) {
-            minPhase[i] = -analyticSignal[i].im;
-        }
-        
-        // Create Minimum Phase frequency spectrum
-        const minPhaseSpectrum: { re: number; im: number }[] = [];
-        for (let i = 0; i < this.windowSize; i++) {
-            minPhaseSpectrum[i] = {
-                re: amplitudes[i] * Math.cos(minPhase[i]),
-                im: amplitudes[i] * Math.sin(minPhase[i])
-            };
-        }
-        
-        // Return to time domain to get Min Phase impulse response
-        const impulse = this.ifft(minPhaseSpectrum);
-        
-        // Create output buffer
-        const outputBuffer: number[][] = [
-            [],
-            []
-        ];
-        
-        // Copy real values to both channels
-        for (let i = 0; i < this.windowSize; i++) {
-            outputBuffer[0][i] = impulse[i].re;
-            outputBuffer[1][i] = impulse[i].re;
+            // Get log of magnitude spectrum for cepstral processing
+            const logMag: number[] = [];
+            for (let i = 0; i < this.windowSize; i++) {
+                logMag[i] = Math.log(amplitudes[i] + 0.000001);
+            }
+            
+            // Compute cepstrum from FFT of log magnitude
+            const cepstrum = this.fft(logMag);
+            
+            // Prepare hilbert transform
+            const H: number[] = [];
+            for (let i = 0; i < this.windowSize; i++) {
+                H[i] = 0;
+            }
+            H[0] = 1; // DC component
+            H[this.windowSize / 2] = 1; // Nyquist frequency
+            for (let i = 1; i < this.windowSize / 2; i++) {
+                H[i] = 2; // Double positive frequencies
+            }
+            
+            // Apply hilbert transform
+            const cepstrumHilbert: { re: number; im: number }[] = [];
+            for (let i = 0; i < this.windowSize; i++) {
+                cepstrumHilbert[i] = {
+                    re: cepstrum[i].re * H[i],
+                    im: cepstrum[i].im * H[i]
+                };
+            }
+            const analyticSignal = this.ifft(cepstrumHilbert);
+            
+            // Get phase rotated signal from imaginary part of analytic signal
+            const minPhase: number[] = [];
+            for (let i = 0; i < this.windowSize; i++) {
+                minPhase[i] = -analyticSignal[i].im;
+            }
+            
+            // Create Minimum Phase frequency spectrum
+            const minPhaseSpectrum: { re: number; im: number }[] = [];
+            for (let i = 0; i < this.windowSize; i++) {
+                minPhaseSpectrum[i] = {
+                    re: amplitudes[i] * Math.cos(minPhase[i]),
+                    im: amplitudes[i] * Math.sin(minPhase[i])
+                };
+            }
+            
+            // Return to time domain to get Min Phase impulse response
+            const impulse = this.ifft(minPhaseSpectrum);
+            
+            // Copy real values to output channel
+            for (let i = 0; i < this.windowSize; i++) {
+                outputBuffer[channel][i] = impulse[i].re;
+            }
         }
         
         // Normalize output

@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ -1620.0, 273.0, 544.0, 162.0 ],
+		"rect" : [ -1827.0, 307.0, 540.0, 160.0 ],
 		"openinpresentation" : 1,
 		"gridsize" : [ 8.0, 8.0 ],
 		"gridsnaponopen" : 2,
@@ -18,7 +18,40 @@
 		"boxanimatetime" : 500,
 		"style" : "default",
 		"subpatcher_template" : "Max Audio Effect_template",
+		"title" : "puriFIR",
 		"boxes" : [ 			{
+				"box" : 				{
+					"id" : "obj-56",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 296.0, 24.0, 67.0, 22.0 ],
+					"saved_object_attributes" : 					{
+						"allwindowsactive" : 0,
+						"appicon_mac" : "",
+						"appicon_win" : "",
+						"audiosupport" : 1,
+						"bundleidentifier" : "com.mycompany.myprogram",
+						"cantclosetoplevelpatchers" : 0,
+						"cefsupport" : 0,
+						"copysupport" : 1,
+						"database" : 0,
+						"extensions" : 1,
+						"gensupport" : 0,
+						"midisupport" : 1,
+						"noloadbangdefeating" : 0,
+						"overdrive" : 0,
+						"preffilename" : "",
+						"searchformissingfiles" : 1,
+						"statusvisible" : 1,
+						"usesearchpath" : 0
+					}
+,
+					"text" : "standalone"
+				}
+
+			}
+, 			{
 				"box" : 				{
 					"id" : "obj-34",
 					"maxclass" : "newobj",
@@ -670,7 +703,6 @@
 					"fontsize" : 9.5,
 					"id" : "obj-74",
 					"ignoreclick" : 1,
-					"linecount" : 2,
 					"lines" : 1,
 					"maxclass" : "textedit",
 					"numinlets" : 1,
@@ -679,9 +711,8 @@
 					"parameter_enable" : 0,
 					"patching_rect" : [ 944.0, 352.0, 82.0, 50.0 ],
 					"presentation" : 1,
-					"presentation_linecount" : 2,
 					"presentation_rect" : [ 399.0, 56.0, 136.939021170139313, 16.463415026664734 ],
-					"text" : "Done processing, window: 2048"
+					"text" : "Load input"
 				}
 
 			}
@@ -1034,7 +1065,7 @@
 
 							}
  ],
-						"originid" : "pat-540"
+						"originid" : "pat-95"
 					}
 ,
 					"patching_rect" : [ 408.0, 328.0, 61.0, 22.0 ],
@@ -1316,7 +1347,7 @@
 					"saved_attribute_attributes" : 					{
 						"valueof" : 						{
 							"parameter_longname" : "live.numbox[1]",
-							"parameter_mmax" : 64000.0,
+							"parameter_mmax" : 418041.904761904734187,
 							"parameter_modmode" : 3,
 							"parameter_shortname" : "live.numbox",
 							"parameter_type" : 0,
@@ -1343,7 +1374,7 @@
 					"saved_attribute_attributes" : 					{
 						"valueof" : 						{
 							"parameter_longname" : "live.numbox",
-							"parameter_mmax" : 64000.0,
+							"parameter_mmax" : 418041.904761904734187,
 							"parameter_modmode" : 3,
 							"parameter_shortname" : "live.numbox",
 							"parameter_type" : 0,
@@ -2045,7 +2076,7 @@
 
 			}
  ],
-		"originid" : "pat-536",
+		"originid" : "pat-91",
 		"parameters" : 		{
 			"obj-14" : [ "live.text[8]", "live.text[7]", 0 ],
 			"obj-16" : [ "live.menu", "live.menu", 0 ],

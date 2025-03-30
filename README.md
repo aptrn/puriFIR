@@ -21,8 +21,17 @@ puriFIR is a powerful tool for converting impulse responses to minimum phase, of
 
 1. Download pre-built artifacts from the [release section](https://github.com/aptrn/puriFIR/releases)
 2. Choose your preferred installation method:
-   - **Standalone**: Unzip `puriFIR.zip` and run `puriFIR.exe`
-   - **Max For Live**: Drag and drop `puriFIR.amxd` into an Ableton Live Audio track
+   - **Max For Live**: Drag and drop `puriFIR.amxd` into an Ableton Live Audio track.
+   - **Standalone**: Unzip `puriFIR.zip` and run `puriFIR.exe`.
+
+### Usage
+
+1.  Load an audio sample by pressing the `Load` button or drag and drop a file into the waveform display. You can preview the sample by using the `Play` and `Stop` buttons.
+2.  Optionally select a region to crop using `Start` and `End` numbers or dragging on the waveform display and then presssing the Crop button.
+3.  Select the desired `window size` (default at 2048).
+4.  Process the sample clicking the `Process` button.
+5.  Have a listen to the IR preview using the `Play` and `Stop` buttons and save it to disk by clicking the `Save` button.
+6.  Once saved you can then use the IR in your favourite convolution engine (Xfer Serum 2, khs Convolver, Hybrid Reverb etc)
 
 ### Original Version
 

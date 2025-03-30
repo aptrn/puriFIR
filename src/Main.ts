@@ -21,36 +21,29 @@ function process() {
   //@ts-ignore
   let frameCount = inputBuffer.framecount();
 
-
-  let input: number[][]  = [];
+  let input: number[][] = [];
   for (let i = 0; i < channelCount; i++) {
     input[i] = inputBuffer.peek(i+1, 0, frameCount);
   }
 
-  // Handle mono input by duplicating the channel
+  // Handle mono input by duplicating the channel for processing
   if (channelCount === 1) {
     input[1] = [...input[0]];
-    channelCount = 2;
   }
-  
   
   try {
     let puriFIR = new PuriFIR(windowSize);
-    let processed = puriFIR.process({...input});
+    let processed = puriFIR.process(input);
 
     let wet = new Buffer("output");
     wet.send("clear");
     wet.send("sizeinsamps", processed[0].length);
     
-    // If input was mono, only output one channel
-    if (inputBuffer.channelcount() === 1) {
-      wet.poke(1, 0, processed[0]);
-    } else {
-      for (let i = 0; i < channelCount; i++) {
-        wet.poke(i+1, 0, processed[i]);
-      }
+    // Output only the channels that were in the input
+    for (let i = 0; i < channelCount; i++) {
+      wet.poke(i+1, 0, processed[i]);
     }
-    post("Done processing, window: ", windowSize, "\n");
+    post("Done processing \n");
   } catch (error: any) {
     post("Error: " + (error?.message || String(error)) + "\n");
   }
