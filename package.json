@@ -1,7 +1,7 @@
 {
-  "name": "maxmsp-ts-example",
+  "name": "puriFIR",
   "version": "0.0.1",
-  "description": "Example Max Project using Typescript with NPM dependencies",
+  "description": "PuriFIR - Minimum Phase Impulse Response Converter (porting from Kallyn puriFIR)",
   "scripts": {
     "build": "pnpm maxmsp build",
     "dev": "pnpm maxmsp dev"
@@ -13,9 +13,7 @@
   "author": "aptrn",
   "license": "MIT",
   "devDependencies": {
-    "@aptrn/markovchain-ts": "^0.0.1",
     "@aptrn/maxmsp-ts": "^0.0.1",
-    "@not251/not251": "^0.0.2",
     "@types/maxmsp": "^1.0.13",
     "typescript": "^5.6.3"
   }

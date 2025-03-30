@@ -1,19 +1,5 @@
 {
   "output_path": "lib",
   "dependencies": {
-    "@not251/not251": {
-      "alias": "not251",
-      "files": [
-        "index.js"
-      ],
-      "path": ""
-    },
-    "@aptrn/markovchain-ts": {
-      "alias": "mkc",
-      "files": [
-        "index.js"
-      ],
-      "path": ""
-    }
   }
 }
