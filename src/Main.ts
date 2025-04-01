@@ -12,30 +12,32 @@ inlets = 1;
 outlets = 1;
 autowatch = 1;
 
+
 // Random name generator arrays
-const adjectives = [
-  "Crystal", "Golden", "Silver", "Diamond", "Emerald", "Ruby", "Sapphire",
-  "Cosmic", "Ethereal", "Mystic", "Celestial", "Lunar", "Solar", "Stellar",
-  "Oceanic", "Mountain", "Forest", "Desert", "Arctic", "Tropical", "Alpine"
+const adjectives: string[] = [
+  "Neanderthal", "Jurassic", "Cambrian", "Pleistocene", "Mesozoic", "Paleolithic", "Neolithic", "Bronze",
+  "Tetrahedral", "Octahedral", "Dodecahedral", "Icosahedral", "Hexagonal", "Trigonal", "Orthorhombic", "Monoclinic",
+  "Myocardial", "Synaptic", "Mitochondrial", "Endoplasmic", "Golgi", "Lysosomal", "Peroxisomal", "Vacuolar",
+  "Quasiparticle", "Baryonic", "Leptonic", "Hadronic", "Mesonic", "Bosonic", "Fermionic", "Supersymmetric"
 ];
 
-const nouns = [
-  "Echo", "Reverb", "Space", "Cave", "Hall", "Room", "Chamber",
-  "Wave", "Pulse", "Beam", "Field", "Sphere", "Orb", "Core",
-  "Sound", "Tone", "Note", "Chord", "Scale", "Harmony", "Melody"
+const nouns: string[] = [
+  "Tyrannosaurus", "Velociraptor", "Pterodactyl", "Brachiosaurus", "Stegosaurus", "Triceratops", "Archaeopteryx", "Plesiosaur",
+  "Hydrochloric", "Sulfuric", "Nitric", "Phosphoric", "Perchloric", "Hydrobromic", "Hydroiodic", "Chromic",
+  "Hippocampus", "Amygdala", "Hypothalamus", "Pituitary", "Cerebellum", "Medulla", "Thalamus", "Cortex",
+  "Quark", "Gluon", "Neutrino", "Muon", "Tau", "Boson", "Fermion", "Hadron"
 ];
 
 function generateRandomName(): string {
   const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
   const noun = nouns[Math.floor(Math.random() * nouns.length)];
   const randomNum = ("0000" + Math.floor(Math.random() * 9999)).slice(-4);
-  return `${adjective}${noun}${randomNum}`;
+  return `${adjective}_${noun}_${randomNum}`;
 }
 
 function process() {
   let windowSize = parseInt(arguments[0]);
   let inputBuffer = new Buffer("input");
-  let inputFilename = patcher.getnamed("theinput").getattr("file");
 
   //@ts-ignore
   let channelCount = inputBuffer.channelcount();
@@ -64,9 +66,23 @@ function process() {
     for (let i = 0; i < channelCount; i++) {
       wet.poke(i+1, 0, processed[i]);
     }
+
+
+    //messnamed("save4drag", String("Desktop/IR_" + String(windowSize) + "_" + inputFilename + "_The" + randomName + ".wav"));
+    let tempFilePath = patcher.filepath;
+    
+    // Get the directory path and filename separately
+    let lastSlashIndex = tempFilePath.lastIndexOf("/");
+    let dirPath = tempFilePath.substring(0, lastSlashIndex);
+    
     const randomName = generateRandomName();
-    messnamed("save4drag", String("Desktop/IR_" + String(windowSize) + "_" + inputFilename + "_" + randomName + ".wav"));
-    //messnamed("save4drag", String(patcher.filepath + "/IR_" + String(windowSize) + "_" + inputFilename + "_" + randomName + ".wav"));
+    let inputFilename: string = patcher.getnamed("theinput").getattr("file") as string;
+    inputFilename = inputFilename.split(".")[0];
+    
+    // Construct the new file path
+    tempFilePath = `${dirPath}/IR_${windowSize}_${inputFilename}_The${randomName}.wav`;
+    post("Final path: " + tempFilePath + "\n");
+    messnamed("save4drag", String(tempFilePath));
     post("Done processing \n");
   } catch (error: any) {
     post("Error: " + (error?.message || String(error)) + "\n");
