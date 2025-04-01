@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 425.0, 531.0, 1307.0, 768.0 ],
+		"rect" : [ 425.0, 531.0, 539.0, 159.0 ],
 		"openinpresentation" : 1,
 		"gridsize" : [ 8.0, 8.0 ],
 		"gridsnaponopen" : 2,
@@ -795,8 +795,9 @@
 					"parameter_enable" : 0,
 					"patching_rect" : [ 1000.0, 360.0, 352.296327233314514, 32.148159682750702 ],
 					"presentation" : 1,
+					"presentation_linecount" : 2,
 					"presentation_rect" : [ 402.926838874816895, 56.097562313079834, 133.170734882354736, 16.585366249084473 ],
-					"text" : "Done processing"
+					"text" : "11dragfiles 2022/04/01 11OLSEN.DE"
 				}
 
 			}
@@ -1149,7 +1150,7 @@
 
 							}
  ],
-						"originid" : "pat-64"
+						"originid" : "pat-12"
 					}
 ,
 					"patching_rect" : [ 408.0, 328.0, 61.0, 22.0 ],
@@ -1645,6 +1646,7 @@
 , 			{
 				"box" : 				{
 					"buffername" : "output",
+					"chanoffset" : 0,
 					"id" : "obj-9",
 					"maxclass" : "waveform~",
 					"numinlets" : 5,
@@ -2291,7 +2293,7 @@
 
 			}
  ],
-		"originid" : "pat-60",
+		"originid" : "pat-8",
 		"parameters" : 		{
 			"obj-14" : [ "live.text[8]", "live.text[7]", 0 ],
 			"obj-16" : [ "live.menu", "live.menu", 0 ],
