@@ -43,6 +43,8 @@ function process() {
     for (let i = 0; i < channelCount; i++) {
       wet.poke(i+1, 0, processed[i]);
     }
+
+    messnamed("save4drag", "Desktop/output" + String(Math.random()*999) + ".wav");
     post("Done processing \n");
   } catch (error: any) {
     post("Error: " + (error?.message || String(error)) + "\n");

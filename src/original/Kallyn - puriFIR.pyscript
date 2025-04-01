@@ -1,0 +1,179 @@
+'''
+Kallyn - puriFIR (Minimum Phase Impulse Response Converter)
+Creates the "perfect" impulse response from sample selection using minimum phase filter techniques
+
+Place in "Program Files\Image-Line\FL Studio 2024\System\Config\Audio scripts"
+
+HOW TO USE -
+1. Select desired region to convert
+    - Best practice is to keep selection below 1 second, although script can handle any selection with enough samples
+2. Click Run Script and run "Kallyn - puriFIR"
+3. Choose length
+4. Click Run and wait
+
+OPTIONS DOCS
+Resolution: determines resolution of spectral capture
+    - smaller values have shorter decay with less frequency resolution, higher values have finer frequency content with longer tail
+    - recommended 4096 or 8192
+
+Created by Patrick "Kallyn" Kallenbach, 2025
+HUGE thanks to mystran, Z1202, and AnalogGuy1 from https://www.kvraudio.com/forum/viewtopic.php?p=8849427#p8849427
+'''
+
+from enveditor import *
+import math
+import cmath
+
+# Bit reverse functino used in iterative FFT algorithm
+def bitReverse(x, log2n): # compute bit reversal of current index
+    n = 0
+    for _ in range(log2n):
+        n <<= 1
+        n |= (x & 1)
+        x >>= 1
+    return n
+
+# FFT algorithm adapted from https://www.geeksforgeeks.org/iterative-fast-fourier-transformation-polynomial-multiplication/
+# Implementation assisted with ChatGPT
+def fft(x): # compute FFT
+    n = len(x)
+    X = [0] * n
+    log2n = int(math.log2(n))
+ 
+    # bit reversal of the given array
+    for i in range(n):
+        rev = bitReverse(i, log2n)
+        X[i] = x[rev]
+ 
+    # j is iota
+    J = complex(0, 1)
+    for s in range(1, log2n + 1):
+        m = 1 << s  # 2 power s
+        m2 = m >> 1  # m2 = m/2 -1
+        w = complex(1, 0)
+ 
+        # principle root of nth complex
+        # root of unity.
+        wm = cmath.exp(J * (cmath.pi / m2))
+        for j in range(m2):
+            for k in range(j, n, m):
+ 
+                # t = twiddle factor
+                t = w * X[k + m2]
+                u = X[k]
+ 
+                # similar calculating y[k]
+                X[k] = u + t
+ 
+                # similar calculating y[k+n/2]
+                X[k + m2] = u - t
+            w *= wm
+            
+    return X
+           
+# compute IFFT using FFT algorithm
+def ifft(X):
+    # Collect array size to rescale output
+    size = len(X)
+    
+    # Convert array to complex conjugate
+    X = [complex(i.real, -i.imag) for i in X]
+    
+    # Take FFT of conjugate array
+    x = fft(X)
+    
+    # undo complex conjugate
+    x = [complex(i.real, -i.imag) for i in x]
+    
+    # Rescale
+    x = [i / size for i in x]
+    
+    return x
+            
+# Define Edison script parameters
+menu = ScriptDialog('Kallyn - PuriFIR', 'Create pure frequency impulse response from input sample. Check script for instructions.')
+menu.AddInputCombo('Resolution', '2048,4096,8192,16384', 1)
+
+# If script is run
+if menu.Execute():
+    
+    # initialize windowSize and selectionLength veriables
+    log2n = int(menu.GetInputValue('Resolution') + 11)
+    windowSize = 2**log2n
+    
+    # Get selection legnth from selection start and end
+    selectionLength = Editor.SelectionEndS - Editor.SelectionStartS + 1
+    selectionLengthRef = selectionLength
+    
+    # Error checking for insufficient sample selection
+    if selectionLength < windowSize:
+        Utils.ShowMessage('Sample selection is too short for selected output resolution')
+        
+    else:
+        # initialize output amplitudes
+        amplitudes = [0] * windowSize
+        
+        # prepare hanning window function: single cosine period
+        hanning = [(0.5 - 0.5 * math.cos(2*math.pi*i/windowSize)) for i in range(windowSize)]
+            
+        # declare variables for spectrum analysis
+        track = Editor.SelectionStartS
+        jump = (windowSize // 2) # jump variable saves calculations for window skip
+            
+        # Iterate across full sample length and collect maximum spectrum of full selection
+        while selectionLength > windowSize:
+            # Full progress bar, progress tracked by comparing remaining selection length with total length
+            Utils.ProgressMsg('Gathering Spectral information...', selectionLengthRef - selectionLength, selectionLengthRef)
+            
+            # Construct buffer from average of left/right channels, windowed by hanning
+            buffer = [((EditorSample.GetSampleAt(track + i, 0) + EditorSample.GetSampleAt(track + i, 1)) / 2 * hanning[i]) for i in range(windowSize)]
+            
+            # Gather spectral data of buffer
+            bufferFFT = fft(buffer)
+                
+            # Update maximum peak array
+            for i in range(windowSize):
+                # Replace each amplitude with current bin amplitude if current is larger, otherwise leave it untouched
+                mag = abs(bufferFFT[i])
+                amplitudes[i] = amplitudes[i] if amplitudes[i] > mag else mag
+                
+            # Shift selection window
+            selectionLength -= jump
+            track += jump
+        
+        # Get log of magnitude spectrum for cepstral processing
+        logMag = [cmath.log(abs(i) + 0.000001) for i in amplitudes]
+        
+        # Compute cepstrum from FFT of log magnitude
+        cepstrum = fft(logMag)
+            
+        # Prepare hilbert transform
+        H = [0] * windowSize  # Initialize with zeros
+        H[0] = 1  # DC component
+        H[windowSize//2] = 1  # Nyquist frequency
+        H[1:windowSize//2] = [2 for _ in range(windowSize//2 - 1)]   # Double positive frequencies
+            
+        # Apply hilbert transform by creating analytic signal in cepstral domain
+        cepstrumHilbert = [cepstrum[i] * H[i] for i in range(windowSize)]
+        analyticSignal = ifft(cepstrumHilbert)
+        
+        # Get phase rotated signal from imaginary part of analytic signal, invert for minimum phase
+        minPhase = [-1 * analyticSignal[i].imag for i in range(windowSize)]
+            
+        # Create Minimum Phase frequency spectrum from amplitudes and new phases
+        minPhaseSpectrum = [cmath.rect(amplitudes[i], minPhase[i]) for i in range(windowSize)]
+            
+        # Return to time domain to get Min Phase impulse response
+        impulse = ifft(minPhaseSpectrum)
+            
+        # Prepare output window size to allocate new impulse
+        EditorSample.Length = windowSize
+        EditorSample.SilenceFromTo(0, EditorSample.Length - 1)
+            
+        # Print real values of output impulse
+        for i in range(windowSize):
+            EditorSample.SetSampleAt(i, 0, impulse[i].real)
+            EditorSample.SetSampleAt(i, 1, impulse[i].real)
+                
+        # Normalize final output
+        EditorSample.NormalizeFromTo(0, EditorSample.Length - 1, 1)

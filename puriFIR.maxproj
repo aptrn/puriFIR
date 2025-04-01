@@ -1,8 +1,8 @@
 {
-	"name" : "puriFIR ",
+	"name" : "puriFIR",
 	"version" : 1,
 	"creationdate" : 3810572918,
-	"modificationdate" : 3826199980,
+	"modificationdate" : 3826227234,
 	"viewrect" : [ -2189.0, 284.0, 870.0, 1006.0 ],
 	"autoorganize" : 1,
 	"hideprojectwindow" : 0,
@@ -26,6 +26,14 @@
 ,
 			"PuriFIR.js" : 			{
 				"kind" : "javascript",
+				"local" : 1
+			}
+
+		}
+,
+		"externals" : 		{
+			"11dragfiles.mxe64" : 			{
+				"kind" : "object",
 				"local" : 1
 			}
 
