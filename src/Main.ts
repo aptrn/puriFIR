@@ -65,8 +65,8 @@ function process() {
       wet.poke(i+1, 0, processed[i]);
     }
     const randomName = generateRandomName();
-    //messnamed("save4drag", String("Desktop/IR_" + String(windowSize) + "_" + inputFilename + "_" + randomName + ".wav"));
-    messnamed("save4drag", String(patcher.filepath + "/IR_" + String(windowSize) + "_" + inputFilename + "_" + randomName + ".wav"));
+    messnamed("save4drag", String("Desktop/IR_" + String(windowSize) + "_" + inputFilename + "_" + randomName + ".wav"));
+    //messnamed("save4drag", String(patcher.filepath + "/IR_" + String(windowSize) + "_" + inputFilename + "_" + randomName + ".wav"));
     post("Done processing \n");
   } catch (error: any) {
     post("Error: " + (error?.message || String(error)) + "\n");
