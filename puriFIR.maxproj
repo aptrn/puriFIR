@@ -2,7 +2,7 @@
 	"name" : "puriFIR",
 	"version" : 1,
 	"creationdate" : 3810572918,
-	"modificationdate" : 3826364096,
+	"modificationdate" : 3826384761,
 	"viewrect" : [ 768.0, 259.0, 870.0, 1006.0 ],
 	"autoorganize" : 1,
 	"hideprojectwindow" : 0,
