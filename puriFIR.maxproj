@@ -2,8 +2,8 @@
 	"name" : "puriFIR",
 	"version" : 1,
 	"creationdate" : 3810572918,
-	"modificationdate" : 3826361925,
-	"viewrect" : [ -2189.0, 284.0, 870.0, 1006.0 ],
+	"modificationdate" : 3826364096,
+	"viewrect" : [ 768.0, 259.0, 870.0, 1006.0 ],
 	"autoorganize" : 1,
 	"hideprojectwindow" : 0,
 	"showdependencies" : 1,
@@ -35,6 +35,10 @@
 			"11dragfiles.mxe64" : 			{
 				"kind" : "object",
 				"local" : 1
+			}
+,
+			"11dragfiles.mxo" : 			{
+				"kind" : "object"
 			}
 
 		}
