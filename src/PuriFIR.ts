@@ -24,77 +24,70 @@ export class PuriFIR {
             throw new Error('Input buffer is too short!');
         }
 
-        // Process each channel independently
         const outputBuffer: number[][] = [[], []];
         
         for (let channel = 0; channel < 2; channel++) {
-            // Initialize output amplitudes for this channel
-            const amplitudes: number[] = [];
+            // Initialize amplitude spectrum
+            const amplitudes = new Array(this.windowSize);
             for (let i = 0; i < this.windowSize; i++) {
                 amplitudes[i] = 0;
             }
             
-            // Process the input buffer in overlapping windows
+            // Process overlapping windows
             let track = 0;
             const jump = this.windowSize / 2;
             
             while (track + this.windowSize <= inputBuffer[channel].length) {
-                // Construct buffer from current channel, windowed by hanning
-                const buffer: number[] = [];
+                // Apply hanning window
+                const buffer = new Array(this.windowSize);
                 for (let i = 0; i < this.windowSize; i++) {
                     buffer[i] = inputBuffer[channel][track + i] * this.hanningWindow[i];
                 }
                 
-                // Gather spectral data of buffer
-                const bufferFFT = this.fft(buffer);
+                // Get spectrum
+                const spectrum = this.fft(buffer);
                 
-                // Update maximum peak array
+                // Update maximum magnitudes
                 for (let i = 0; i < this.windowSize; i++) {
-                    const mag = Math.sqrt(bufferFFT[i].re * bufferFFT[i].re + bufferFFT[i].im * bufferFFT[i].im);
-                    amplitudes[i] = Math.max(amplitudes[i], mag);
+                    const mag = Math.sqrt(spectrum[i].re * spectrum[i].re + spectrum[i].im * spectrum[i].im);
+                    if (mag > amplitudes[i]) amplitudes[i] = mag;
                 }
                 
                 track += jump;
             }
-
-            // Get log of magnitude spectrum for cepstral processing
-            const logMag: number[] = [];
+            
+            // Convert to minimum phase
+            
+            // 1. Get log spectrum
+            const logSpectrum = new Array(this.windowSize);
             for (let i = 0; i < this.windowSize; i++) {
-                logMag[i] = Math.log(amplitudes[i] + 0.000001);
+                logSpectrum[i] = Math.log(Math.max(amplitudes[i], 1e-6));
             }
             
-            // Compute cepstrum from FFT of log magnitude
-            const cepstrum = this.fft(logMag);
+            // 2. Get cepstrum
+            const cepstrum = this.fft(logSpectrum);
             
-            // Prepare hilbert transform
-            const H: number[] = [];
-            for (let i = 0; i < this.windowSize; i++) {
-                H[i] = 0;
-            }
-            H[0] = 1; // DC component
-            H[this.windowSize / 2] = 1; // Nyquist frequency
-            for (let i = 1; i < this.windowSize / 2; i++) {
-                H[i] = 2; // Double positive frequencies
-            }
+            // 3. Apply Hilbert transform in cepstral domain
+            const H = new Array(this.windowSize);
+            for (let i = 0; i < this.windowSize; i++) H[i] = 0;
+            H[0] = 1;
+            H[this.windowSize / 2] = 1;
+            for (let i = 1; i < this.windowSize / 2; i++) H[i] = 2;
             
-            // Apply hilbert transform
-            const cepstrumHilbert: { re: number; im: number }[] = [];
+            const cepstrumHilbert = new Array(this.windowSize);
             for (let i = 0; i < this.windowSize; i++) {
                 cepstrumHilbert[i] = {
                     re: cepstrum[i].re * H[i],
                     im: cepstrum[i].im * H[i]
                 };
             }
+            
+            // 4. Get minimum phase
             const analyticSignal = this.ifft(cepstrumHilbert);
+            const minPhase = analyticSignal.map(x => -x.im);
             
-            // Get phase rotated signal from imaginary part of analytic signal
-            const minPhase: number[] = [];
-            for (let i = 0; i < this.windowSize; i++) {
-                minPhase[i] = -analyticSignal[i].im;
-            }
-            
-            // Create Minimum Phase frequency spectrum
-            const minPhaseSpectrum: { re: number; im: number }[] = [];
+            // 5. Construct minimum phase spectrum
+            const minPhaseSpectrum = new Array(this.windowSize);
             for (let i = 0; i < this.windowSize; i++) {
                 minPhaseSpectrum[i] = {
                     re: amplitudes[i] * Math.cos(minPhase[i]),
@@ -102,18 +95,16 @@ export class PuriFIR {
                 };
             }
             
-            // Return to time domain to get Min Phase impulse response
+            // 6. Get impulse response
             const impulse = this.ifft(minPhaseSpectrum);
             
-            // Copy real values to output channel
+            // Copy to output
             for (let i = 0; i < this.windowSize; i++) {
                 outputBuffer[channel][i] = impulse[i].re;
             }
         }
         
-        // Normalize output
         this.normalize(outputBuffer);
-        
         return outputBuffer;
     }
 
@@ -135,54 +126,67 @@ export class PuriFIR {
         return n;
     }
 
-    private fft(x: number[]): { re: number; im: number }[] {
+    private fft(x: number[] | { re: number; im: number }[]): { re: number; im: number }[] {
         const n = x.length;
-        const X: { re: number; im: number }[] = [];
-        for (let i = 0; i < n; i++) {
-            X[i] = { re: 0, im: 0 };
-        }
         const log2n = Math.log(n) / Math.log(2);
+        
+        // Convert input to complex numbers if it's real
+        const X: { re: number; im: number }[] = new Array(n);
+        for (let i = 0; i < n; i++) {
+            if (typeof x[i] === 'number') {
+                X[i] = { re: x[i] as number, im: 0 };
+            } else {
+                const c = x[i] as { re: number; im: number };
+                X[i] = { re: c.re, im: c.im };
+            }
+        }
         
         // Bit reversal
         for (let i = 0; i < n; i++) {
-            const rev = this.bitReverse(i, log2n);
-            X[i] = { re: x[rev], im: 0 };
+            const j = this.bitReverse(i, log2n);
+            if (j > i) {
+                const temp = { ...X[i] };
+                X[i] = { ...X[j] };
+                X[j] = temp;
+            }
         }
         
         // FFT computation
         for (let s = 1; s <= log2n; s++) {
             const m = 1 << s;
             const m2 = m >> 1;
-            let w = { re: 1, im: 0 };
-            
             const wm = {
-                re: Math.cos(Math.PI / m2),
-                im: Math.sin(Math.PI / m2)
+                re: Math.cos(2 * Math.PI / m),
+                im: -Math.sin(2 * Math.PI / m)
             };
             
-            for (let j = 0; j < m2; j++) {
-                for (let k = j; k < n; k += m) {
+            for (let k = 0; k < n; k += m) {
+                let w = { re: 1, im: 0 };
+                
+                for (let j = 0; j < m2; j++) {
                     const t = {
-                        re: w.re * X[k + m2].re - w.im * X[k + m2].im,
-                        im: w.re * X[k + m2].im + w.im * X[k + m2].re
+                        re: w.re * X[k + j + m2].re - w.im * X[k + j + m2].im,
+                        im: w.re * X[k + j + m2].im + w.im * X[k + j + m2].re
                     };
                     
-                    const u = X[k];
-                    X[k] = {
+                    const u = X[k + j];
+                    
+                    X[k + j] = {
                         re: u.re + t.re,
                         im: u.im + t.im
                     };
-                    X[k + m2] = {
+                    
+                    X[k + j + m2] = {
                         re: u.re - t.re,
                         im: u.im - t.im
                     };
+                    
+                    const wNew = {
+                        re: w.re * wm.re - w.im * wm.im,
+                        im: w.re * wm.im + w.im * wm.re
+                    };
+                    w = wNew;
                 }
-                
-                const wNew = {
-                    re: w.re * wm.re - w.im * wm.im,
-                    im: w.re * wm.im + w.im * wm.re
-                };
-                w = wNew;
             }
         }
         
@@ -192,28 +196,17 @@ export class PuriFIR {
     private ifft(X: { re: number; im: number }[]): { re: number; im: number }[] {
         const n = X.length;
         
-        // Take complex conjugate
-        const XConj: { re: number; im: number }[] = [];
-        for (let i = 0; i < n; i++) {
-            XConj[i] = { re: X[i].re, im: -X[i].im };
-        }
+        // Conjugate the input
+        const Xconj = X.map(x => ({ re: x.re, im: -x.im }));
         
-        // Forward FFT
-        const xReals: number[] = [];
-        for (let i = 0; i < n; i++) {
-            xReals[i] = XConj[i].re;
-        }
-        const x = this.fft(xReals);
+        // Do forward FFT
+        const x = this.fft(Xconj);
         
-        // Take complex conjugate and scale
-        const result: { re: number; im: number }[] = [];
-        for (let i = 0; i < n; i++) {
-            result[i] = {
-                re: x[i].re / n,
-                im: -x[i].im / n
-            };
-        }
-        return result;
+        // Conjugate and scale the result
+        return x.map(val => ({
+            re: val.re / n,
+            im: -val.im / n
+        }));
     }
 
     private normalize(buffer: number[][]): void {
