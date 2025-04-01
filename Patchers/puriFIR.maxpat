@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 259.0, 391.0, 1726.0, 540.0 ],
+		"rect" : [ 425.0, 531.0, 1307.0, 768.0 ],
 		"openinpresentation" : 1,
 		"gridsize" : [ 8.0, 8.0 ],
 		"gridsnaponopen" : 2,
@@ -20,18 +20,6 @@
 		"subpatcher_template" : "Max Audio Effect_template",
 		"title" : "puriFIR",
 		"boxes" : [ 			{
-				"box" : 				{
-					"id" : "obj-102",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 592.0, 312.0, 50.0, 22.0 ],
-					"text" : "44100."
-				}
-
-			}
-, 			{
 				"box" : 				{
 					"id" : "obj-96",
 					"maxclass" : "newobj",
@@ -226,7 +214,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 528.0, 320.0, 66.0, 22.0 ],
+					"patching_rect" : [ 536.0, 304.0, 66.0, 22.0 ],
 					"text" : "prepend sr"
 				}
 
@@ -245,148 +233,12 @@
 			}
 , 			{
 				"box" : 				{
-					"basictuning" : 440,
-					"data" : 					{
-						"clips" : [ 							{
-								"absolutepath" : "C:/Users/Ale/Desktop/output197.55036951495535.wav",
-								"filename" : "output197.55036951495535.wav",
-								"filekind" : "audiofile",
-								"id" : "u807000428",
-								"selection" : [ 0.0, 1.0 ],
-								"loop" : 0,
-								"content_state" : 								{
-
-								}
-
-							}
- ]
-					}
-,
-					"followglobaltempo" : 0,
-					"formantcorrection" : 0,
-					"id" : "obj-63",
-					"maxclass" : "playlist~",
-					"mode" : "basic",
-					"numinlets" : 1,
-					"numoutlets" : 5,
-					"originallength" : [ 0.0, "ticks" ],
-					"originaltempo" : 120.0,
-					"outlettype" : [ "signal", "signal", "signal", "", "dictionary" ],
-					"parameter_enable" : 0,
-					"patching_rect" : [ 427.999999523162842, 51.833332479000092, 150.0, 30.0 ],
-					"pitchcorrection" : 0,
-					"quality" : "basic",
-					"saved_attribute_attributes" : 					{
-						"candicane2" : 						{
-							"expression" : ""
-						}
-,
-						"candicane3" : 						{
-							"expression" : ""
-						}
-,
-						"candicane4" : 						{
-							"expression" : ""
-						}
-,
-						"candicane5" : 						{
-							"expression" : ""
-						}
-,
-						"candicane6" : 						{
-							"expression" : ""
-						}
-,
-						"candicane7" : 						{
-							"expression" : ""
-						}
-,
-						"candicane8" : 						{
-							"expression" : ""
-						}
-
-					}
-,
-					"timestretch" : [ 0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"basictuning" : 440,
-					"data" : 					{
-						"clips" : [ 							{
-								"absolutepath" : "C:/Users/Ale/Desktop/output275.3264153611909.wav",
-								"filename" : "output275.3264153611909.wav",
-								"filekind" : "audiofile",
-								"id" : "u356000416",
-								"selection" : [ 0.0, 1.0 ],
-								"loop" : 0,
-								"content_state" : 								{
-
-								}
-
-							}
- ]
-					}
-,
-					"followglobaltempo" : 0,
-					"formantcorrection" : 0,
-					"id" : "obj-59",
-					"maxclass" : "playlist~",
-					"mode" : "basic",
-					"numinlets" : 1,
-					"numoutlets" : 5,
-					"originallength" : [ 0.0, "ticks" ],
-					"originaltempo" : 120.0,
-					"outlettype" : [ "signal", "signal", "signal", "", "dictionary" ],
-					"parameter_enable" : 0,
-					"patching_rect" : [ 408.0, 16.0, 150.0, 30.0 ],
-					"pitchcorrection" : 0,
-					"quality" : "basic",
-					"saved_attribute_attributes" : 					{
-						"candicane2" : 						{
-							"expression" : ""
-						}
-,
-						"candicane3" : 						{
-							"expression" : ""
-						}
-,
-						"candicane4" : 						{
-							"expression" : ""
-						}
-,
-						"candicane5" : 						{
-							"expression" : ""
-						}
-,
-						"candicane6" : 						{
-							"expression" : ""
-						}
-,
-						"candicane7" : 						{
-							"expression" : ""
-						}
-,
-						"candicane8" : 						{
-							"expression" : ""
-						}
-
-					}
-,
-					"timestretch" : [ 0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"id" : "obj-57",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 512.0, 152.0, 120.0, 22.0 ],
+					"patching_rect" : [ 512.0, 136.0, 120.0, 22.0 ],
 					"text" : "prepend drag"
 				}
 
@@ -398,7 +250,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 513.95121955871582, 186.146342277526855, 66.0, 22.0 ],
+					"patching_rect" : [ 512.0, 184.0, 66.0, 22.0 ],
 					"text" : "11dragfiles"
 				}
 
@@ -410,7 +262,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 656.0, 96.0, 109.0, 22.0 ],
+					"patching_rect" : [ 728.0, 96.0, 109.0, 22.0 ],
 					"text" : "prepend writewave"
 				}
 
@@ -422,7 +274,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 3,
 					"outlettype" : [ "bang", "", "" ],
-					"patching_rect" : [ 624.0, 40.0, 41.0, 22.0 ],
+					"patching_rect" : [ 512.195134162902832, 56.0, 231.804865837097168, 22.0 ],
 					"text" : "t b s s"
 				}
 
@@ -434,7 +286,7 @@
 					"numinlets" : 0,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 624.0, 8.0, 72.0, 22.0 ],
+					"patching_rect" : [ 512.0, 7.707315921783447, 72.0, 22.0 ],
 					"text" : "r save4drag"
 				}
 
@@ -445,7 +297,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 296.0, 24.0, 67.0, 22.0 ],
+					"patching_rect" : [ 592.0, 8.0, 67.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"allwindowsactive" : 0,
 						"appicon_mac" : "",
@@ -944,7 +796,7 @@
 					"patching_rect" : [ 1000.0, 360.0, 352.296327233314514, 32.148159682750702 ],
 					"presentation" : 1,
 					"presentation_rect" : [ 402.926838874816895, 56.097562313079834, 133.170734882354736, 16.585366249084473 ],
-					"text" : "Saving output"
+					"text" : "Done processing"
 				}
 
 			}
@@ -1297,7 +1149,7 @@
 
 							}
  ],
-						"originid" : "pat-111"
+						"originid" : "pat-64"
 					}
 ,
 					"patching_rect" : [ 408.0, 328.0, 61.0, 22.0 ],
@@ -1412,7 +1264,7 @@
 					"maxclass" : "live.comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 327.804879188537598, 384.195127487182617, 48.507460951805115, 18.0 ],
+					"patching_rect" : [ 344.0, 384.0, 48.507460951805115, 18.0 ],
 					"presentation" : 1,
 					"presentation_rect" : [ 4.0, 56.0, 32.089565396308899, 18.0 ],
 					"text" : "Start",
@@ -1628,7 +1480,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 568.0, 392.0, 57.0, 23.0 ],
+					"patching_rect" : [ 576.0, 392.0, 57.0, 23.0 ],
 					"text" : "0 -1 0 -1"
 				}
 
@@ -1676,7 +1528,8 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "float", "bang" ],
 					"patching_rect" : [ 304.0, 328.0, 75.0, 22.0 ],
-					"text" : "buffer~ input"
+					"text" : "buffer~ input",
+					"varname" : "theinput"
 				}
 
 			}
@@ -1728,7 +1581,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 128.0, 440.0, 50.0, 22.0 ],
+					"patching_rect" : [ 144.0, 464.0, 50.0, 22.0 ],
 					"text" : "compile"
 				}
 
@@ -1747,15 +1600,16 @@
 					"fontsize" : 6.0,
 					"gradient" : 1,
 					"id" : "obj-60",
+					"linecount" : 4,
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 512.195134162902832, 96.0, 127.0, 15.0 ],
+					"patching_rect" : [ 512.0, 96.0, 126.0, 36.0 ],
 					"presentation" : 1,
-					"presentation_linecount" : 2,
-					"presentation_rect" : [ 456.585376739501953, 77.073172569274902, 79.99998950958252, 22.0 ],
-					"text" : "Desktop/output780.1074892360725.wav",
+					"presentation_linecount" : 5,
+					"presentation_rect" : [ 456.585376739501953, 77.073172569274902, 81.0, 43.0 ],
+					"text" : "C:/Users/Ale/Documents/code/puriFIR/Patchers/puriFIR.maxpat/IR_4096_Lev4_SynthChords_G#min_4.wav_CelestialOrb2721.wav",
 					"textcolor" : [ 0.901960784313726, 0.901960784313726, 0.901960784313726, 0.0 ],
 					"varname" : "messagedrag"
 				}
@@ -2200,16 +2054,7 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-102", 1 ],
-					"order" : 0,
-					"source" : [ "obj-58", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
 					"destination" : [ "obj-71", 0 ],
-					"order" : 1,
 					"source" : [ "obj-58", 0 ]
 				}
 
@@ -2446,7 +2291,7 @@
 
 			}
  ],
-		"originid" : "pat-107",
+		"originid" : "pat-60",
 		"parameters" : 		{
 			"obj-14" : [ "live.text[8]", "live.text[7]", 0 ],
 			"obj-16" : [ "live.menu", "live.menu", 0 ],

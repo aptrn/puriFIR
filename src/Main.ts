@@ -12,9 +12,30 @@ inlets = 1;
 outlets = 1;
 autowatch = 1;
 
+// Random name generator arrays
+const adjectives = [
+  "Crystal", "Golden", "Silver", "Diamond", "Emerald", "Ruby", "Sapphire",
+  "Cosmic", "Ethereal", "Mystic", "Celestial", "Lunar", "Solar", "Stellar",
+  "Oceanic", "Mountain", "Forest", "Desert", "Arctic", "Tropical", "Alpine"
+];
+
+const nouns = [
+  "Echo", "Reverb", "Space", "Cave", "Hall", "Room", "Chamber",
+  "Wave", "Pulse", "Beam", "Field", "Sphere", "Orb", "Core",
+  "Sound", "Tone", "Note", "Chord", "Scale", "Harmony", "Melody"
+];
+
+function generateRandomName(): string {
+  const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const noun = nouns[Math.floor(Math.random() * nouns.length)];
+  const randomNum = ("0000" + Math.floor(Math.random() * 9999)).slice(-4);
+  return `${adjective}${noun}${randomNum}`;
+}
+
 function process() {
   let windowSize = parseInt(arguments[0]);
   let inputBuffer = new Buffer("input");
+  let inputFilename = patcher.getnamed("theinput").getattr("file");
 
   //@ts-ignore
   let channelCount = inputBuffer.channelcount();
@@ -43,8 +64,9 @@ function process() {
     for (let i = 0; i < channelCount; i++) {
       wet.poke(i+1, 0, processed[i]);
     }
-
-    messnamed("save4drag", "Desktop/output" + String(Math.random()*999) + ".wav");
+    const randomName = generateRandomName();
+    messnamed("save4drag", String("Desktop/IR_" + String(windowSize) + "_" + inputFilename + "_" + randomName + ".wav"));
+    //messnamed("save4drag", String(patcher.filepath + "/IR_" + String(windowSize) + "_" + inputFilename + "_" + randomName + ".wav"));
     post("Done processing \n");
   } catch (error: any) {
     post("Error: " + (error?.message || String(error)) + "\n");
