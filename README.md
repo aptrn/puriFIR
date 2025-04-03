@@ -8,6 +8,8 @@ I created this port because I'm not using FL Studio anymore since 2013 but reall
 
 Pre-built Windows Standalone Application and Max For Live Audio Device are provided in the [release section](https://github.com/aptrn/puriFIR/releases).
 
+If you just want to make your own fork take a look at [PuriFIR.ts](https://github.com/aptrn/puriFIR/blob/main/src/PuriFIR.ts), everything else is just to read and write buffers.
+
 ## Overview
 
 puriFIR is a tool for converting any sample into a minimum phase impulse response.
