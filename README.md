@@ -21,6 +21,7 @@ This version features:
 - Region selection and cropping
 - Processing with selectable window size
 - Output impulse response export to audio file
+- Drag and Drop for input and output files
 
 ## Screenshot
 
