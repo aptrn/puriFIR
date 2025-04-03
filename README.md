@@ -6,7 +6,7 @@ Go check the [demo video](https://www.youtube.com/watch?v=Vx4U7zyS-H4) because i
 
 I created this port because I'm not using FL Studio anymore since 2013 but really wanted to try this tool so this was the fastest solution. I guess it could be useful to other people too.
 
-Pre-built Windows Standalone Application and Max For Live Audio Device are provided in the [release section](https://github.com/aptrn/puriFIR/releases).
+Pre-built Windows and Mac standalone applications and cross-platform Max For Live Audio Device are provided in the [release section](https://github.com/aptrn/puriFIR/releases).
 
 If you just want to make your own fork take a look at [PuriFIR.ts](https://github.com/aptrn/puriFIR/blob/main/src/PuriFIR.ts), everything else is just to read and write buffers.
 
