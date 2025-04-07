@@ -15,6 +15,6 @@
   "devDependencies": {
     "@aptrn/maxmsp-ts": "^0.0.1",
     "@types/maxmsp": "^1.0.13",
-    "typescript": "^5.6.3"
+    "typescript": "^5.8.3"
   }
 }
