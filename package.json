@@ -14,7 +14,7 @@
   "license": "MIT",
   "devDependencies": {
     "@aptrn/maxmsp-ts": "^0.0.1",
-    "@types/maxmsp": "^1.0.13",
+    "@types/maxmsp": "^1.0.15",
     "typescript": "^5.6.3"
   }
 }

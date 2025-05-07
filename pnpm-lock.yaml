@@ -12,8 +12,8 @@ importers:
         specifier: ^0.0.1
         version: 0.0.1
       '@types/maxmsp':
-        specifier: ^1.0.13
-        version: 1.0.14
+        specifier: ^1.0.15
+        version: 1.0.15
       typescript:
         specifier: ^5.6.3
         version: 5.8.2
@@ -24,8 +24,8 @@ packages:
     resolution: {integrity: sha512-JWX+n3ClyHxT9yaQ7aoAE4r0YODKCmwgGJkK5QLKzQ0LCzhTrBYNaE3HpEUnAulLeyULrvvvqyw23uWzF9Wpfw==}
     hasBin: true
 
-  '@types/maxmsp@1.0.14':
-    resolution: {integrity: sha512-cEKqcpP8z2voFpMRLg3OcEaBWtetW/aMyzmrrm0i8/h4097d/zOksxbpnK7j8+qIH+xqV0CZAbMcUdSS8H559g==}
+  '@types/maxmsp@1.0.15':
+    resolution: {integrity: sha512-p2yhTP13jZIt2Bz5yGb/ovD/b+jkjRKuRmLb18LzTpwR1W6XeIBxjoiry15FvVE3Pi2nyo3IU6Ks+rQjUYCRfg==}
 
   chokidar@4.0.3:
     resolution: {integrity: sha512-Qgzu8kfBvo+cA4962jnP1KkS6Dop5NS6g7R5LFYJr4b8Ub94PPQXUksCw9PvXoeXPRRddRNC5C1JQUR2SMGtnA==}
@@ -46,7 +46,7 @@ snapshots:
     dependencies:
       chokidar: 4.0.3
 
-  '@types/maxmsp@1.0.14': {}
+  '@types/maxmsp@1.0.15': {}
 
   chokidar@4.0.3:
     dependencies:
